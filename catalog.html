@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Каталог автозапчастей</title>
+  <style>
+    body { font-family: Arial; padding: 20px; }
+    input { padding: 10px; width: 300px; margin-bottom: 20px; }
+    .item { padding: 10px; border-bottom: 1px solid #ccc; }
+  </style>
+</head>
+<body>
+  <h1>Каталог автозапчастей</h1>
+  <input type="text" id="search" placeholder="Поиск по названию...">
+  <div id="catalog">
+    <div class="item">Фильтр масляный — Toyota Corolla</div>
+    <div class="item">Тормозные колодки — Nexia 3</div>
+    <div class="item">Амортизатор — Spark</div>
+    <div class="item">Ремень ГРМ — Cobalt</div>
+    <div class="item">Фара передняя — Lacetti</div>
+  </div>
+
+  <script>
+    const search = document.getElementById('search');
+    search.addEventListener('input', () => {
+      const filter = search.value.toLowerCase();
+      document.querySelectorAll('.item').forEach(item => {
+        item.style.display = item.textContent.toLowerCase().includes(filter) ? '' : 'none';
+      });
+    });
+  </script>
+</body>
+</html>
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Каталог автозапчастей</title>
+  <style>
+    body { font-family: Arial; padding: 20px; background: #f4f4f4; }
+    .product { background: #fff; margin: 10px 0; padding: 10px; border-radius: 5px; }
+    .product img { max-height: 100px; float: left; margin-right: 10px; }
+    .price { color: green; font-weight: bold; }
+    .cart { position: fixed; top: 10px; right: 10px; background: #fff; padding: 10px; border: 1px solid #ccc; }
+    .cart ul { list-style: none; padding: 0; }
+  </style>
+</head>
+<body>
+
+<h1>Онлайн-каталог автозапчастей</h1>
+
+<input type="text" id="search" placeholder="Поиск...">
+<select id="filter">
+  <option value="all">Все категории</option>
+  <option value="масляный">Масляные фильтры</option>
+  <option value="топливный">Топливные фильтры</option>
+</select>
+
+<div id="catalog"></div>
+
+<div class="cart">
+  <h3>Корзина</h3>
+  <ul id="cart-items"></ul>
+</div>
+
+<script>
+const products = [
+  { id: 1, name: "Фильтр масляный Hengst H97W", category: "масляный", price: "85 000 сум", image: "assets/hengst1.png" },
+  { id: 2, name: "Фильтр топливный Hengst H150WK", category: "топливный", price: "95 000 сум", image: "assets/hengst2.png" },
+  { id: 3, name: "Фильтр масляный Hengst H14W", category: "масляный", price: "88 000 сум", image: "assets/hengst3.png" }
+];
+
+function renderCatalog() {
+  const search = document.getElementById('search').value.toLowerCase();
+  const filter = document.getElementById('filter').value;
+  const catalog = document.getElementById('catalog');
+  catalog.innerHTML = '';
+  products.filter(p => 
+    (filter === 'all' || p.category === filter) &&
+    p.name.toLowerCase().includes(search)
+  ).forEach(product => {
+    const div = document.createElement('div');
+    div.className = 'product';
+    div.innerHTML = `
+      <img src="${product.image}" alt="${product.name}">
+      <strong>${product.name}</strong><br>
+      <span class="price">${product.price}</span><br>
+      <button onclick="addToCart(${product.id})">В корзину</button>
+    `;
+    catalog.appendChild(div);
+  });
+}
+
+const cart = [];
+function addToCart(id) {
+  const item = products.find(p => p.id === id);
+  cart.push(item);
+  const list = document.getElementById('cart-items');
+  const li = document.createElement('li');
+  li.textContent = item.name + " — " + item.price;
+  list.appendChild(li);
+}
+
+document.getElementById('search').addEventListener('input', renderCatalog);
+document.getElementById('filter').addEventListener('change', renderCatalog);
+
+renderCatalog();
+</script>
+
+</body>
+</html>
